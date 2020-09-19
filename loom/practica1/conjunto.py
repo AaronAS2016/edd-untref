@@ -39,7 +39,6 @@ class Conjunto:
     def __repr__(self):
         return self.__conjunto
     
-
 a = Conjunto([1,2])
 b = Conjunto([2,3])
 
