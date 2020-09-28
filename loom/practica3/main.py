@@ -1,5 +1,6 @@
-from persistencia import guardar_informacion, recuperar_informacion, comprobar_existencia_archivo
+from persistencia import guardar_informacion, recuperar_informacion
 from clases import Cliente
+from excepciones import NoHayUsuarioCreadoError
 from random import randrange
 
 
@@ -13,8 +14,12 @@ def guardar_usuario(metodo, clientes):
 
 
 def recuperar_informacion_en_disco(metodo):
-    informacion = recuperar_informacion(metodo)
-    print(f"Cliente guardado en disco como {metodo} es: \n{informacion}")
+    try:
+        informacion = recuperar_informacion(metodo)
+        print(f"Cliente guardado en disco como {metodo} es: \n{informacion}")
+    except NoHayUsuarioCreadoError as e:
+        print("Ups")
+        print(e)
 
 
 if __name__ == "__main__":
@@ -32,15 +37,15 @@ if __name__ == "__main__":
     while(respuesta_usuario != opcion_salida):
         print("""
 
-        ======= Persistencia de datos =================
+======= Persistencia de datos =================
 
-        1.Guardar nuevo estudiante aleatorio en Pickle 
-        2.Guardar nuevo estudiante aleatorio en JSON
-        3.Guardar nuevo estudiante aleatorio en Shelve
-        4.Recuperar estudiante aleatorio en Pickle
-        5.Recuperar estudiante aleatorio en JSON
-        6.Recuperar estudiante aleatorio en Shelve
-        7.Salir
+1.Guardar nuevo estudiante aleatorio en Pickle 
+2.Guardar nuevo estudiante aleatorio en JSON
+3.Guardar nuevo estudiante aleatorio en Shelve
+4.Recuperar estudiante aleatorio en Pickle
+5.Recuperar estudiante aleatorio en JSON
+6.Recuperar estudiante aleatorio en Shelve
+7.Salir
         """)
         respuesta_usuario = input("Que te gustaria hacer? ")
         if respuesta_usuario == "1":

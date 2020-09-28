@@ -1,9 +1,20 @@
 from config import localizacion
+from excepciones import NoHayUsuarioCreadoError
 from conversor import convertir_dicc_a_instancia, convertir_instancia_a_dicc
 import pickle
 import json
 import shelve
 import os
+
+
+def chequear_data_guardada(f):
+    def chequear_data_guardada_decorator(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except (json.decoder.JSONDecodeError, EOFError):
+            raise NoHayUsuarioCreadoError("No hay un cliente guardado")
+            
+    return chequear_data_guardada_decorator
 
 
 def guardar_informacion(data, method="pickle"):
@@ -25,7 +36,6 @@ def guardar_informacion_json(data, ubicacion=localizacion["json"], parsear_data=
     with open(ubicacion, "w") as escritor:
         json.dump(convertir_instancia_a_dicc(data), escritor)
 
-
 def guardar_informacion_shelve(data,  ubicacion=localizacion["shelve"]):
     with shelve.open(ubicacion) as escritor:
         escritor["persona"] = data
@@ -43,14 +53,14 @@ def recuperar_informacion(method="pickle"):
 
     return se_pudo_recuperar
 
-
+@chequear_data_guardada
 def recuperar_informacion_pickle(ubicacion=localizacion["pickle"]):
     data_recuperada = []
     with open(ubicacion, "rb") as lector:
         data_recuperada = pickle.load(lector)
     return data_recuperada
 
-
+@chequear_data_guardada
 def recuperar_informacion_json(ubicacion=localizacion["json"], parsear_data=convertir_dicc_a_instancia):
     data_recuperada = []
     with open(ubicacion, "r") as lector:
@@ -58,6 +68,7 @@ def recuperar_informacion_json(ubicacion=localizacion["json"], parsear_data=conv
     return data_recuperada
 
 
+@chequear_data_guardada
 def recuperar_informacion_shelve(ubicacion=localizacion["shelve"]):
     data_recuperada = []
     with shelve.open(ubicacion) as lector:
@@ -66,5 +77,3 @@ def recuperar_informacion_shelve(ubicacion=localizacion["shelve"]):
     return data_recuperada
 
 
-def comprobar_existencia_archivo():
-    return [metodo for metodo, ubicacion in localizacion.items() if os.path.isfile(ubicacion)]
