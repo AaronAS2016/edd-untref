@@ -65,7 +65,7 @@ class EstadisticaCovid:
         if not edad:
             return edad_promedio
 
-        edad_contable =  12 / edad if anio_meses == "Meses" else edad
+        edad_contable = 0 if anio_meses == "Meses" else edad
         cantidad =  edad_promedio['cantidad']
         promedio = edad_promedio['promedio']
 
@@ -76,31 +76,33 @@ class EstadisticaCovid:
 
     @staticmethod
     def iterador_estadistica_covid(informacion_almacenada, informacion_recibida):
-        # 1. Cantidad de casos por provincia, separados por género
-        sexo = informacion_recibida["sexo"]
 
-        provincia = informacion_recibida["residencia_provincia_nombre"]
-        informacion_almacenada['cantidad_casos_por_provincia'].setdefault(
-            provincia, {"M": 0, "F": 0, "NR": 0})
+        if informacion_recibida["clasificacion_resumen"] == "Confirmado":
+            # 1. Cantidad de casos por provincia, separados por género
+            sexo = informacion_recibida["sexo"]
 
-        informacion_almacenada['cantidad_casos_por_provincia'][provincia][sexo] += 1
-        # 2. Cantidad de casos por rango etario (0 a 20, 20 a 40, 40 a 60, 60 o más)
-        edad = informacion_recibida["edad"]
-        anio_meses = informacion_recibida['edad_años_meses']
-        rango_edad = EstadisticaCovid.procesar_edad(edad, anio_meses)
+            provincia = informacion_recibida["residencia_provincia_nombre"]
+            informacion_almacenada['cantidad_casos_por_provincia'].setdefault(
+                provincia, {"M": 0, "F": 0, "NR": 0})
 
-        informacion_almacenada['cantidad_casos_por_rango_etario'][rango_edad] += 1
+            informacion_almacenada['cantidad_casos_por_provincia'][provincia][sexo] += 1
+            # 2. Cantidad de casos por rango etario (0 a 20, 20 a 40, 40 a 60, 60 o más)
+            edad = informacion_recibida["edad"]
+            anio_meses = informacion_recibida['edad_años_meses']
+            rango_edad = EstadisticaCovid.procesar_edad(edad, anio_meses)
 
-        # 3 Promedio de edad de los infectados por provincia
-        informacion_almacenada['promedio_edad_infectado'].setdefault(provincia, { "promedio": 0, "cantidad":0 })
-        informacion_almacenada['promedio_edad_infectado'][provincia] = EstadisticaCovid.procesar_promedio(
-            edad, informacion_almacenada['promedio_edad_infectado'][provincia], anio_meses)
+            informacion_almacenada['cantidad_casos_por_rango_etario'][rango_edad] += 1
 
-        # 4. Provincias ordenadas por cantidad de casos, con los casos
+            # 3 Promedio de edad de los infectados por provincia
+            informacion_almacenada['promedio_edad_infectado'].setdefault(provincia, { "promedio": 0, "cantidad":0 })
+            informacion_almacenada['promedio_edad_infectado'][provincia] = EstadisticaCovid.procesar_promedio(
+                edad, informacion_almacenada['promedio_edad_infectado'][provincia], anio_meses)
 
-        informacion_almacenada['provincias_con_mayor_casos'].setdefault(
-            provincia, 0)
-        informacion_almacenada['provincias_con_mayor_casos'][provincia] += 1
+            # 4. Provincias ordenadas por cantidad de casos, con los casos
+
+            informacion_almacenada['provincias_con_mayor_casos'].setdefault(
+                provincia, 0)
+            informacion_almacenada['provincias_con_mayor_casos'][provincia] += 1
 
         return informacion_almacenada
 
