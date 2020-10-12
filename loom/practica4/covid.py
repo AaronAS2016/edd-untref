@@ -3,9 +3,10 @@ import os
 import csv
 import struct
 from escritor import Lector, EscritorCovid
+from pprint import pprint as pp
 
 # Configuracion
-ubicacion_archivo = f"{pathlib.Path(__file__).parent.absolute()}/test.csv"
+ubicacion_archivo = f"{pathlib.Path(__file__).parent.absolute()}/Covid19Casos.csv"
 
 
 class EstadisticaCovid:
@@ -117,4 +118,4 @@ if __name__ == "__main__":
     estadistica.guardar_analisis()
 
     resultados = estadistica.obtener_resultados()
-    print(resultados["promedio_edad_infectado"])
+    pp(resultados)

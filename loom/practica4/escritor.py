@@ -100,17 +100,19 @@ class EscritorCovid(Escritor):
     @staticmethod
     def __iterador_guardado_promedio_edad(escritor, datos, formato):
 
-        for informacion in datos.values():
+        for provincia, informacion in datos.items():
+            longitud_provincia = len(provincia)
             promedio = informacion['promedio']
             longitud = len(str(promedio))
             escritor.write(
-                f"{longitud},{promedio}-".encode())
+                f"{longitud_provincia},{provincia},{longitud},{promedio}-".encode())
 
     @staticmethod
     def __iterador_guardado_por_mayores_casos(escritor, datos, formato):
-        for _, casos in datos:
+        for provincia, casos in datos:
 
-            longitud_casos = len(f"{casos}")
+            longitud_provincia = len(provincia)
+            longitud_casos = len(str(casos))
 
             escritor.write(
-                f"{longitud_casos},{casos}-".encode())
+                f"{longitud_provincia},{provincia},{longitud_casos},{casos}-".encode())
