@@ -1,10 +1,6 @@
 import os
 from utils import remover_digitos, remover_caracteres, remover_caracteres_especiales, es_numero_romano
-
-class NoEncontroArchivoIndice(Exception):
-    pass
-
-
+from excepciones import NoEncontroArchivoIndice
 class LectorIndice:
     def __init__(self, archivo, novelas):
         self.__archivo = archivo
@@ -88,6 +84,7 @@ class LectorIndice:
     def __sanatizar_linea(self, linea):
         linea_sanatizada = remover_digitos(linea)
         linea_sanatizada = linea_sanatizada.replace("(p)", "")
+        linea_sanatizada = linea_sanatizada.replace("--", " ")
         linea_sanatizada = remover_caracteres_especiales(linea_sanatizada)
         linea_sanatizada = linea_sanatizada.strip()
         return linea_sanatizada

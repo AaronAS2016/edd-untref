@@ -4,7 +4,7 @@ from BTrees.OOBTree import OOBTree
 import string
 
 
-class IndiceInvertidoBTree:
+class IndiceInvertido:
 
     def __init__(self, documentos):
         self.stop_words = frozenset(
