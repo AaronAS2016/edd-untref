@@ -5,6 +5,9 @@ from excepciones import NoSeEncontroPalabra
 class TestIndiceInvertido(unittest.TestCase):
 
     def __init__(self, *args, **kwars):
+        '''
+        Mi archivo text.txt son las novelas pero solo con el primer capitulo de cada una
+        '''
         super().__init__(*args, **kwars)
         self._indice = IndiceNovelas("test.txt", novelas=[
             "LA BUENAVENTURA",
