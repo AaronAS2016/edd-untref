@@ -1,8 +1,7 @@
-from lector import LectorIndice 
+from lector import LectorIndice
 from indice import IndiceInvertido
 from pprint import pprint as pp
 from excepciones import NoSeEncontroPalabra
-
 
 
 class IndiceNovelas:
@@ -17,12 +16,11 @@ class IndiceNovelas:
         return self.__indice_invertido.obtener_indice()
 
     def buscar(self, palabra):
-        resultado = self.__indice_invertido.buscar(f"{palabra}*")
+        resultado = self.__indice_invertido.buscar(palabra)
         if len(resultado[0]) == 0:
             raise NoSeEncontroPalabra(palabra)
-        
-        return resultado
 
+        return resultado
 
 
 if __name__ == "__main__":
@@ -54,9 +52,12 @@ if __name__ == "__main__":
     archivo = "novelas.txt"
 
     indice = IndiceNovelas(archivo, novelas)
-    
+
     for palabra in palabras_a_buscar:
         try:
             pp(indice.buscar(palabra))
         except NoSeEncontroPalabra as error:
             pp(str(error))
+    pp(indice.buscar("1806"))
+    pp(indice.buscar("apellido"))
+    pp(indice.buscar("caos"))

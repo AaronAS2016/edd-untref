@@ -1,7 +1,13 @@
 import os
+import re
 from utils import remover_digitos, remover_caracteres, remover_caracteres_especiales, es_numero_romano
 from excepciones import NoEncontroArchivoIndice
+
+
 class LectorIndice:
+    _remover_pag_regex = r'\(p([0-9]){1,}\)'
+    _remover_marca_glosario = r"\[([0-9])*\-([0-9])*]"
+
     def __init__(self, archivo, novelas):
         self.__archivo = archivo
         self.__novelas = novelas
@@ -22,7 +28,7 @@ class LectorIndice:
                 listado_de_paginas = self.__procesar_indice(lector, texto)
                 self.__recortar_textos(lector, texto, listado_de_paginas)
         except FileNotFoundError:
-            raise NoEncontroArchivoIndice
+            raise NoEncontroArchivoIndice(self.__archivo)
 
     def __buscar_indice(self, lector, texto):
         linea_indice = -1
@@ -81,10 +87,27 @@ class LectorIndice:
     def __encontro_epilogo(self, linea):
         return self.__sanatizar_linea(linea).find("EPÍLOGO") != -1
 
+    def __eliminar_marca_glosario(self, linea):
+        return re.sub(self._remover_marca_glosario, "", linea)
+
+    def __eliminar_numero_de_linea(self, linea):
+        linea_sanatizada = linea
+        if linea[:2].isdigit():
+            linea_sanatizada = linea[3:]
+        return linea_sanatizada
+
+    def __eliminar_guiones_de_dialogo(self, linea):
+        return linea.replace("--", " ")
+
+    def __eliminar_numero_de_pag(self, linea):
+        return re.sub(self._remover_pag_regex, '', linea)
+
     def __sanatizar_linea(self, linea):
-        linea_sanatizada = remover_digitos(linea)
-        linea_sanatizada = linea_sanatizada.replace("(p)", "")
-        linea_sanatizada = linea_sanatizada.replace("--", " ")
+        linea_sanatizada = self.__eliminar_numero_de_pag(linea)
+        linea_sanatizada = self.__eliminar_marca_glosario(linea_sanatizada)
+        linea_sanatizada = self.__eliminar_guiones_de_dialogo(linea_sanatizada)
+        linea_sanatizada = self.__eliminar_numero_de_linea(
+            linea_sanatizada)
         linea_sanatizada = remover_caracteres_especiales(linea_sanatizada)
         linea_sanatizada = linea_sanatizada.strip()
         return linea_sanatizada
@@ -100,4 +123,3 @@ class EscritorIndice:
             for linea in contenido:
                 escritor.write(linea)
                 escritor.write("\n")
-

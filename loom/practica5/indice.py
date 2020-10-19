@@ -1,5 +1,5 @@
-from nltk.stem import SnowballStemmer  # Stemmer
-from nltk.corpus import stopwords  # Stopwords
+from nltk.stem import SnowballStemmer
+from nltk.corpus import stopwords
 from BTrees.OOBTree import OOBTree
 import string
 
@@ -35,7 +35,8 @@ class IndiceInvertido:
         reemplazos = (("á", "a"), ("é", "e"),
                       ("ó", "o"), ("ú", "u"), ("í", "i"))
         palabra = palabra.lower()
-        palabra = palabra.strip(string.punctuation+"»"+"\x97"+"¿"+"¡" + "?" + "!")
+        palabra = palabra.strip(
+            string.punctuation+"»"+"\x97"+"¿"+"¡" + "?" + "!")
         for a, b in reemplazos:
             palabra = palabra.replace(a, b)
         palabra_lematizada = palabra
