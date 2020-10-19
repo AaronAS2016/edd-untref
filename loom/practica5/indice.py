@@ -1,6 +1,8 @@
 from nltk.stem import SnowballStemmer
 from nltk.corpus import stopwords
 from BTrees.OOBTree import OOBTree
+from excepciones import NoSeEncontroPalabra
+from lector import LectorIndice
 import string
 
 
@@ -94,3 +96,22 @@ class IndiceInvertido:
 
     def obtener_indice(self):
         return self._indice
+
+
+class IndiceNovelas:
+    def __init__(self, archivo, novelas):
+        self.__procesar_archivos(archivo, novelas)
+        self.__indice_invertido = IndiceInvertido(novelas)
+
+    def __procesar_archivos(self, archivo, novelas):
+        LectorIndice(archivo, novelas)
+
+    def obtener_indice(self):
+        return self.__indice_invertido.obtener_indice()
+
+    def buscar(self, palabra):
+        resultado = self.__indice_invertido.buscar(palabra)
+        if len(resultado[0]) == 0:
+            raise NoSeEncontroPalabra(palabra)
+
+        return resultado
