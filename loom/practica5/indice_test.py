@@ -21,7 +21,7 @@ class TestIndiceInvertido(unittest.TestCase):
 
     def _testear_busqueda_de_palabra(self, resultado_esperado, palabra):
         resultado = self._indice.buscar(palabra)
-        self.assertEquals(resultado_esperado, resultado)
+        self.assertEqual(resultado_esperado, resultado)
     
     def test_buscar_palabra_agosto(self):
         resultado_esperado = {'agosto'}, {'LA BUENAVENTURA', 'EL AÑO EN SPITZBERG'}
